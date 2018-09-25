@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Meta Tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Title -->
+  <title>Minimal To Do</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/src/assets/favicon/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="/src/assets//favicon/favicon-16x16.png" sizes="16x16" />
+
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway:300,400" rel="stylesheet">
+
+</head>
+
+<body class="bg-black">
+
+  <div class="container mx-auto">
+    <div class="mx-auto w-full md:w-1/2 py-3 px-4">
+      <div class="flex items-center mb-6">
+        <!--Add buttons to initiate auth sequence and sign out-->
+        <button class="bg-transparent hover:bg-white py-2 px-4 border border-white hover:border-transparent rounded"
+          id="authorize_button" style="display: none;"><img src="src/assets/google-drive.png"></button>
+        <button class="bg-transparent hover:bg-red py-2 px-4 border border-red hover:border-transparent rounded"
+          id="signout_button" style="display: none;"><img src="src/assets/signout-icon.png"></button>
+      </div>
+      <div class="flex items-center mb-6">
+        <pre class="text-white" id="content"></pre>
+      </div>
+    </div>
+  </div>
+
+  <div id="app"></div>
+
+  <!-- Arquivos para Sign in e out -->
+  <script type="text/javascript" src="./signin.js"></script>
+
+  <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
+    onreadystatechange="if (this.readyState === 'complete') this.onload()">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+  <!-- JS Build Script -->
+  <script src="/dist/build.js"></script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-96297044-9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-96297044-9');
+  </script>
+
+</body>
+
+</html>
