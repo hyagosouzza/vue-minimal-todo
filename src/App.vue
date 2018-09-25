@@ -73,7 +73,7 @@ export default {
         this.todos.push({
           title: this.newTodo,
           completed: false,
-          date: now.getDate() +'/'+ now.getMonth() + '/' + now.getFullYear(),
+          date: now.getDate() +'/'+ (now.getMonth()+1) + '/' + now.getFullYear(),
           id: this.todos.length
         })
       }  
