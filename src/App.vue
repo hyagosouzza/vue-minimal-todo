@@ -17,29 +17,33 @@
         <div class="input-wrapper relative">
           <input type="text"
                 v-model="newTodo"
-                v-on:keyup.enter="addTodo"
-                v-on:focus="show_guide = true"
-                v-on:blur="show_guide = false"
-                placeholder="What needs to be done today?"
+                placeholder="O que precisa ser feito?"
                 class="p-4 mb-4 w-full bg-transparent border-grey-light text-white border rounded">
+          <input type="checkbox" id="checkbox" v-model="checked">
+          <label class="text-white" for="checkbox">Tarefa com prazo de conclusão.</label>
+          <br>
+          <br>
+          <datepicker :language="ptBR"
+                v-if="checked === true"
+                v-model="prazo"
+                placeholder="Prazo de conclusão"></datepicker>
 
-          <transition name="fade">
-            <span class="text-guide text-grey-darker absolute text-xs" v-show="show_guide">Press Enter</span>       
-          </transition>   
+          <button v-on:click="addTodo"><span class="text-guide text-white absolute text-xs">Enter</span></button>     
         </div>
-      
+      <br>
         <!-- To Do List -->    
         <ul class="list-reset">
           <transition-group name="fade">
             <li v-for="todo in todos" :key="todo.id"
-                class="py-6 px-2 border-b border-grey-darkest flex justify-between items-center relative todo__item">
+                class="py-6 px-3 border-b border-grey-darkest flex justify-between items-center relative todo__item">
               <div>
                 <input type="checkbox" :id="todo.id" class="cbx hidden" v-model="todo.completed">
                 <label :for="todo.id" class="text-xl cbx__child"></label>
                 <label :for="todo.id" class="cbx__lbl text-white inline-block mt-1" :class="{ completed: todo.completed }">{{ todo.title }}</label>
                 <br>
-                <label style="font-size:10px;font-style:italic;" :for="todo.id" class="cbx__lbl text-yellow-dark inline-block mt-1" :class="{ completed: todo.completed }">{{todo.date}}</label>
+                <label style="font-size:10px;font-style:italic;" :for="todo.id" class="cbx__lbl text-yellow-dark inline-block mt-1" :class="{ completed: todo.completed }">{{todo.date}} <span class="text-green-dark" v-if="todo.prazo">até</span> {{todo.prazo}}</label>
               </div>
+              <button disable style="cursor:pointer;margin-right:40px;"><img src="src/assets/calendar-icon.png"></button>
               <button v-on:click="removeTodo(todo)" type="button" class="flex items-center delete-button absolute pin-r">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
@@ -56,28 +60,40 @@
 <script>
 const STORAGE_KEY = 'todo-storage';
 var now = new Date();
+import Datepicker from 'vuejs-datepicker';
+import {ptBR} from 'vuejs-datepicker/dist/locale'
 
 export default {
   name: 'app',
+  components: {
+    Datepicker
+  },
   data() {
     return {
+      ptBR: ptBR,
       newTodo: '',
       todos: [],
-      show_guide: false
+      show_guide: false,
+      checked: false,
+      prazo: ''
     }
   },
 
   methods: {
+
     addTodo() {
       if(this.newTodo.length) {
         this.todos.push({
           title: this.newTodo,
           completed: false,
           date: now.getDate() +'/'+ (now.getMonth()+1) + '/' + now.getFullYear(),
-          id: this.todos.length
+          id: this.todos.length,
+          prazo: this.prazo
         })
       }  
       this.newTodo = '';      
+      this.prazo = '';
+      this.checked = false;
     },
     removeTodo(todo) {
       this.todos.splice(this.todos.indexOf(todo), 1)
@@ -102,6 +118,19 @@ export default {
 <style lang="scss">
 
   $c-primary: #1dd1a1;
+
+  //Datepicker
+  .vdp-datepicker {
+    div {
+      input {
+        background-color: transparent;
+    color: white;
+    border: solid white 1px;
+    border-radius:5px;
+      }
+    }
+    
+  }
 
   // Global
   body { font-family: 'Raleway', sans-serif; }
