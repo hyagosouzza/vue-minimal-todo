@@ -37,13 +37,14 @@
             <li v-for="todo in todos" :key="todo.id"
                 class="py-6 px-3 border-b border-grey-darkest flex justify-between items-center relative todo__item">
               <div>
-                <input type="checkbox" :id="todo.id" class="cbx hidden" v-on:click="toogleDisable" v-model="todo.completed">
+                <input type="checkbox" :id="todo.id" class="cbx hidden" v-model="todo.completed">
                 <label :for="todo.id" class="text-xl cbx__child"></label>
                 <label :for="todo.id" class="cbx__lbl text-white inline-block mt-1" :class="{ completed: todo.completed }">{{ todo.title }}</label>
                 <br>
                 <label style="font-size:10px;font-style:italic;" :for="todo.id" class="cbx__lbl text-yellow-dark inline-block mt-1" :class="{ completed: todo.completed }">{{todo.date}} <span class="text-green-dark" v-if="todo.prazo">até</span> {{todo.prazo}}</label>
               </div>
-              <button style="margin-right: 40px" v-bind:style="{ cursor: cursor, opacity: opacity}"><img src="src/assets/calendar-icon.png"></button>
+              <button v-if="todo.completed === false" class="able" ><img src="src/assets/calendar-icon.png"></button>
+              <button v-if="todo.completed === true" class="disable" ><img src="src/assets/calendar-icon.png"></button>
               <button v-on:click="removeTodo(todo)" type="button" class="flex items-center delete-button absolute pin-r">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
@@ -70,8 +71,6 @@ export default {
   },
   data() {
     return {
-      opacity: 1,
-      cursor: 'pointer',
       ptBR: ptBR,
       newTodo: '',
       todos: [],
@@ -82,17 +81,6 @@ export default {
   },
 
   methods: {
-
-    toogleDisable() {
-      if(this.opacity === 1) {
-        this.opacity = .5;
-        this.cursor = 'auto';
-      }
-      else {
-        this.opacity = 1;
-        this.cursor = 'pointer';
-      }
-    },
 
     addTodo() {
       if(this.newTodo.length) {
@@ -143,6 +131,18 @@ export default {
       }
     }
     
+  }
+
+  //ToogleButtonCalendar
+  .able {
+    margin-right: 40px;
+    cursor: pointer;
+    opacity: 1;
+  }
+  .disable {
+    margin-right: 40px;
+    cursor: auto;
+    opacity: .5;
   }
 
   // Global
