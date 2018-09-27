@@ -83,15 +83,27 @@ export default {
   methods: {
 
     addTodo() {
-      if(this.newTodo.length) {
-        this.todos.push({
-          title: this.newTodo,
-          completed: false,
-          date: now.getDate() +'/'+ (now.getMonth()+1) + '/' + now.getFullYear(),
-          id: this.todos.length,
-          prazo: this.prazo
-        })
-      }  
+      if (this.prazo === '') {
+        if (this.newTodo.length) {
+          this.todos.push({
+            title: this.newTodo,
+            completed: false,
+            date: now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear(),
+            id: this.todos.length,
+            prazo: this.prazoformato
+          })
+        }
+      } else {
+        if (this.newTodo.length) {
+          this.todos.push({
+            title: this.newTodo,
+            completed: false,
+            date: now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear(),
+            id: this.todos.length,
+            prazo: this.prazo.toLocaleDateString("pt-BR")
+          })
+        }
+      } 
       this.newTodo = '';      
       this.prazo = '';
       this.checked = false;
