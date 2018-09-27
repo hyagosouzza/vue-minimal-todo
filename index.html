@@ -22,31 +22,13 @@
 </head>
 
 <body class="bg-black">
-
-  <div class="container mx-auto">
-    <div class="mx-auto w-full md:w-1/2 py-3 px-4">
-      <div class="flex items-center mb-6">
-        <!--Add buttons to initiate auth sequence and sign out-->
-        <button class="bg-transparent hover:bg-white py-2 px-4 border border-white hover:border-transparent rounded" id="authorize_button"
-          style="display: none;"><img src="src/assets/google-drive.png"></button>
-        <button class="bg-transparent text-white hover:bg-red py-2 px-4 border border-red hover:border-transparent rounded"
-          id="signout_button" style="display: none;">Sair</button>
-      </div>
-      <div class="flex items-center mb-6">
-        <pre class="text-white" id="content"></pre>
-      </div>
-    </div>
-  </div>
+  
   <div id="app"></div>
 
   <!-- Arquivos para Sign in e out -->
-  <script type="text/javascript" src="src/signin.js"></script>
-
+  <script src="src/signin.js"></script>
   <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
-    onreadystatechange="if (this.readyState === 'complete') this.onload()">
-
-    </script>
-
+      onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
   <!-- JS Build Script -->
   <script src="/dist/build.js"></script>
 

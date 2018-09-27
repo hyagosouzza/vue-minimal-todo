@@ -3,14 +3,11 @@ var CLIENT_ID = '272434584361-13ac1lmsqg4esrn1mnuagpso0obgjl3v.apps.googleuserco
 var API_KEY = 'AIzaSyDzR0gTVm3WFHXQmEl1bUxehr3L1CmlmhM';
 
 // Array of API discovery doc URLs for APIs used by the quickstart
-var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest", "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-var SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
-
-var authorizeButton = document.getElementById('authorize_button');
-var signoutButton = document.getElementById('signout_button');
+var SCOPES = "https://www.googleapis.com/auth/drive";
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -35,8 +32,6 @@ function initClient() {
 
     // Handle the initial sign-in state.
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    authorizeButton.onclick = handleAuthClick;
-    signoutButton.onclick = handleSignoutClick;
   });
 }
 
@@ -44,14 +39,28 @@ function initClient() {
  *  Called when the signed in status changes, to update the UI
  *  appropriately. After a sign-in, the API is called.
  */
-function updateSigninStatus(isSignedIn) {
-  if (isSignedIn) {
-    authorizeButton.style.display = 'none';
-    signoutButton.style.display = 'block';
+
+function startDrive() {
+  if (updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())) {
     listFiles();
   } else {
-    authorizeButton.style.display = 'block';
-    signoutButton.style.display = 'none';
+    handleAuthClick();
+  }
+}
+
+function startCalendar() {
+  if (updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())) {
+    addEvent();
+  } else {
+    handleAuthClick();
+  }
+}
+
+function updateSigninStatus(isSignedIn) {
+  if (isSignedIn) {
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -62,23 +71,8 @@ function handleAuthClick(event) {
   gapi.auth2.getAuthInstance().signIn();
 }
 
-/**
- *  Sign out the user upon button click.
- */
 function handleSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
-}
-
-/**
- * Append a pre element to the body containing the given message
- * as its text node. Used to display the results of the API call.
- *
- * @param {string} message Text to be placed in pre element.
- */
-function appendPre(message) {
-  var pre = document.getElementById('content');
-  var textContent = document.createTextNode(message + '\n');
-  pre.appendChild(textContent);
 }
 
 /**
@@ -89,15 +83,41 @@ function listFiles() {
     'pageSize': 10,
     'fields': "nextPageToken, files(id, name)"
   }).then(function (response) {
-    appendPre('Files:');
+    console.log('Files:');
     var files = response.result.files;
     if (files && files.length > 0) {
       for (var i = 0; i < files.length; i++) {
         var file = files[i];
-        appendPre(file.name + ' (' + file.id + ')');
+        console.log(file.name + ' (' + file.id + ')');
       }
     } else {
-      appendPre('No files found.');
+      console.log('No files found.');
     }
   });
 }
+
+var event = {
+  'summary': 'Google I/O 2015',
+  'location': '800 Howard St., San Francisco, CA 94103',
+  'description': 'A chance to hear more about Google\'s developer products.',
+  'start': {
+    'dateTime': '2015-05-28T09:00:00-07:00',
+    'timeZone': 'America/Los_Angeles'
+  },
+  'end': {
+    'dateTime': '2015-05-28T17:00:00-07:00',
+    'timeZone': 'America/Los_Angeles'
+  }
+};
+
+function addEvent() {
+  var request = gapi.client.calendar.events.insert({
+    'calendarId': 'primary',
+    'resource': event
+  });
+
+  request.execute(function (event) {
+    console.log('Event created: ' + event.htmlLink);
+  });
+}
+
