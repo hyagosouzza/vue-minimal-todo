@@ -7,7 +7,7 @@ var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/res
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-var SCOPES = "https://www.googleapis.com/auth/drive";
+var SCOPES = "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/calendar";
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -101,11 +101,11 @@ var event = {
   'location': '800 Howard St., San Francisco, CA 94103',
   'description': 'A chance to hear more about Google\'s developer products.',
   'start': {
-    'dateTime': '2015-05-28T09:00:00-07:00',
+    'dateTime': '2018-09-28T09:00:00-07:00',
     'timeZone': 'America/Los_Angeles'
   },
   'end': {
-    'dateTime': '2015-05-28T17:00:00-07:00',
+    'dateTime': '2018-09-28T17:00:00-07:00',
     'timeZone': 'America/Los_Angeles'
   }
 };
