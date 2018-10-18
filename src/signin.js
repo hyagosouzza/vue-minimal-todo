@@ -35,11 +35,7 @@ function initClient() {
   });
 }
 
-/**
- *  Called when the signed in status changes, to update the UI
- *  appropriately. After a sign-in, the API is called.
- */
-
+//Se usuário ja estiver logado, drive, senão, loga
 function startDrive() {
   if (updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())) {
     listFiles();
@@ -48,14 +44,7 @@ function startDrive() {
   }
 }
 
-function startCalendar(todo) {
-  if (updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())) {
-    addEvent(todo.id, todo.title, todo.date, todo.prazo);
-  } else {
-    handleAuthClick();
-  }
-}
-
+//Verifica se usuário está logado
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     return true;
@@ -71,84 +60,74 @@ function handleAuthClick(event) {
   gapi.auth2.getAuthInstance().signIn();
 }
 
-function handleSignoutClick(event) {
-  gapi.auth2.getAuthInstance().signOut();
+//Se usuário ja estiver logado, cria o evento, senão, loga
+function startCalendar(todo) {
+  if (updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())) {
+    addEvent(todo);
+  } else {
+    handleAuthClick();
+  }
+}
+
+//Cria o Evento no Google Calendar
+function criaEvento(event, todo) {
+  var request = gapi.client.calendar.events.insert({
+    calendarId: "primary",
+    resource: event
+  });
+
+  request.execute(function (event) {
+    todo.eventoAdd = true;
+    todo.eventoLink = event.htmlLink;
+    todo.eventoId = event.id;
+    console.log(event.id);
+    console.log("Evento criado: " + event.htmlLink);
+  });
+}
+
+//Cria uma variável com o evento 
+function addEvent(todo) {
+  var splitDe = todo.date.split("/");
+  var dataDe = splitDe[2] + "-" + splitDe[1] + "-" + splitDe[0];
+  var dataAte;
+
+  if (todo.prazo != "") {
+    var splitAte = todo.prazo.split("/");
+    dataAte = splitAte[2] + "-" + splitAte[1] + "-" + splitAte[0];
+  } else {
+    dataAte = dataDe;
+  }
+
+  var event = {
+    summary: todo.title,
+    description: "Lembrete Minimal TODO",
+    start: {
+      date: dataDe
+    },
+    end: {
+      date: dataAte
+    }
+  };
+
+  criaEvento(event, todo);
+
+}
+
+//Remove evento ao remover tarefa
+function removeEvento(todo) {
+  var request = gapi.client.calendar.events.delete({
+    calendarId: 'primary',
+    eventId: todo.eventoId
+  });
+
+  request.execute(function (event) {
+    console.log('Event deleted: ' + todo.title);
+  });
 }
 
 /**
  * Print files.
  */
 function listFiles() {
-  gapi.client.drive.files.list({
-    'pageSize': 10,
-    'fields': "nextPageToken, files(id, name)"
-  }).then(function (response) {
-    console.log('Files:');
-    var files = response.result.files;
-    if (files && files.length > 0) {
-      for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        console.log(file.name + ' (' + file.id + ')');
-      }
-    } else {
-      console.log('No files found.');
-    }
-  });
+  console.log('Drive');
 }
-
-function criaEvento(event) {
-  console.log(event);
-  var request = gapi.client.calendar.events.insert({
-    'calendarId': 'primary',
-    'resource': event
-  });
-
-  request.execute(function (event) {
-    console.log('Evento criado: ' + event.htmlLink);
-  });
-}
-
-function addEvent(todoId, title, data, prazo) {
-  var splitDe = data.split('/');
-  var dataDe = splitDe[2] + '-' + splitDe[1] + '-' + splitDe[0];
-  var dataAte;
-
-  if(prazo != undefined) {
-    var splitAte = prazo.split('/');
-    dataAte = splitAte[2] + '-' + splitAte[1] + '-' + splitAte[0];
-  } else {
-    dataAte = dataDe;
-  }
-
-  var id = todoId + dataDe.split('-').join('') + dataAte.split('-').join('');
-
-  var event = {
-    'id' : id,
-    'summary': title,
-    'description': 'Lembrete Minimal TODO',
-    'start': {
-      'date': dataDe
-    },
-    'end': {
-      'date': dataAte
-    }
-  };
-
-  var checkRequest = gapi.client.calendar.events.get({
-    'calendarId' : 'primary',
-    'eventId' : id
-  });
-
-  checkRequest.execute( (
-    function(event) {
-      return function(request) {
-        if(request.code === 404) {
-          criaEvento(event);
-        } else {
-          alert("Evento já existe");
-        }
-      };
-    })(event) );
-}
-
-

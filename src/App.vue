@@ -15,7 +15,7 @@
             <img src="/src/assets/logo.svg" class="hidden md:block" width="40" alt="">
           </div>
           <div class="flex items-center mb-6">
-            <button onclick="handleAuthClick()" class="bg-white flex items-center border rounded hover:bg-transparent hover:text-white" style="padding: 5px"><img style="padding-right:5px" src="/src/assets/google-icon.png">Log In</button>
+            <button id="login" onclick="handleAuthClick()" class="flex items-center text-white font-bold" style="padding: 5px"><img style="padding-right:5px" src="/src/assets/google-icon.png">Log In</button>
           </div>
         </div>
         
@@ -58,8 +58,10 @@
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/google-drive.png"></button>
                 </div>
                 <div>
-                  <button v-on:click="callCalendar(todo)" v-if="todo.completed === false" class="able" ><img src="src/assets/calendar-icon.png"></button>
-                  <button v-if="todo.completed === true" class="disable" ><img src="src/assets/calendar-icon.png"></button>
+                  <button class="able" v-on:click="callCalendar(todo)" v-if="todo.eventoAdd === false"><img src="src/assets/calendar-icon.png"></button>
+                  <a v-if="todo.eventoAdd === true" target="_blank"
+                    v-bind:href="todo.eventoLink"><button><img src="src/assets/calendar-icon.png"></button></a>
+                    <p class="text-white text-xs" v-if="todo.eventoAdd === true">Evento Criado</p>             
                 </div>
                 <div><button v-on:click="removeTodo(todo)" type="button" class="flex items-center delete-button absolute pin-r">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -83,28 +85,34 @@ import { ptBR } from "vuejs-datepicker/dist/locale";
 
 export default {
   name: "app",
+  //Componente do calendário para prazo de conclusão
   components: {
     Datepicker
   },
   data() {
     return {
+      //Dados globais
       ptBR: ptBR,
       newTodo: "",
       todos: [],
       show_guide: false,
       checked: false,
-      prazo: "",
-      login: false
+      prazo: ""
     };
   },
 
   methods: {
+    //Adiciona tarefa
     addTodo() {
+      //Se não tiver prazo de conclusão
       if (this.prazo === "") {
         if (this.newTodo.length) {
           this.todos.push({
             title: this.newTodo,
             completed: false,
+            eventoAdd: false,
+            eventoLink: "",
+            eventoId: "",
             date:
               now.getDate() +
               "/" +
@@ -112,14 +120,18 @@ export default {
               "/" +
               now.getFullYear(),
             id: this.todos.length,
-            prazo: this.prazoformato
+            prazo: ""
           });
         }
+        //Se tiver prazo de conclusão
       } else {
         if (this.newTodo.length) {
           this.todos.push({
             title: this.newTodo,
             completed: false,
+            eventoAdd: false,
+            eventoLink: "",
+            eventoId: "",
             date:
               now.getDate() +
               "/" +
@@ -135,9 +147,12 @@ export default {
       this.prazo = "";
       this.checked = false;
     },
+    //Remove tarefa e seu evento
     removeTodo(todo) {
+      removeEvento(todo);
       this.todos.splice(this.todos.indexOf(todo), 1);
     },
+    //Chama o Calendar para logar ou add evento
     callCalendar(todo) {
       startCalendar(todo);
     }
@@ -161,6 +176,10 @@ export default {
 
 <style lang="scss">
 $c-primary: #1dd1a1;
+
+#login:hover {
+  opacity: 0.8;
+}
 
 //Datepicker
 .vdp-datepicker {
