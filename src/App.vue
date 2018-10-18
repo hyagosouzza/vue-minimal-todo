@@ -149,7 +149,10 @@ export default {
     },
     //Remove tarefa e seu evento
     removeTodo(todo) {
-      removeEvento(todo);
+      if (todo.eventoAdd === true) {
+        removeEvento(todo);
+      }
+
       this.todos.splice(this.todos.indexOf(todo), 1);
     },
     //Chama o Calendar para logar ou add evento
