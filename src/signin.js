@@ -48,9 +48,9 @@ function startDrive() {
   }
 }
 
-function startCalendar() {
+function startCalendar(todo) {
   if (updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())) {
-    addEvent();
+    addEvent(todo.id, todo.title, todo.date, todo.prazo);
   } else {
     handleAuthClick();
   }
@@ -96,28 +96,59 @@ function listFiles() {
   });
 }
 
-var event = {
-  'summary': 'Google I/O 2015',
-  'location': '800 Howard St., San Francisco, CA 94103',
-  'description': 'A chance to hear more about Google\'s developer products.',
-  'start': {
-    'dateTime': '2018-09-28T09:00:00-07:00',
-    'timeZone': 'America/Los_Angeles'
-  },
-  'end': {
-    'dateTime': '2018-09-28T17:00:00-07:00',
-    'timeZone': 'America/Los_Angeles'
-  }
-};
-
-function addEvent() {
+function criaEvento(event) {
+  console.log(event);
   var request = gapi.client.calendar.events.insert({
     'calendarId': 'primary',
     'resource': event
   });
 
   request.execute(function (event) {
-    console.log('Event created: ' + event.htmlLink);
+    console.log('Evento criado: ' + event.htmlLink);
   });
 }
+
+function addEvent(todoId, title, data, prazo) {
+  var splitDe = data.split('/');
+  var dataDe = splitDe[2] + '-' + splitDe[1] + '-' + splitDe[0];
+  var dataAte;
+
+  if(prazo != undefined) {
+    var splitAte = prazo.split('/');
+    dataAte = splitAte[2] + '-' + splitAte[1] + '-' + splitAte[0];
+  } else {
+    dataAte = dataDe;
+  }
+
+  var id = todoId + dataDe.split('-').join('') + dataAte.split('-').join('');
+
+  var event = {
+    'id' : id,
+    'summary': title,
+    'description': 'Lembrete Minimal TODO',
+    'start': {
+      'date': dataDe
+    },
+    'end': {
+      'date': dataAte
+    }
+  };
+
+  var checkRequest = gapi.client.calendar.events.get({
+    'calendarId' : 'primary',
+    'eventId' : id
+  });
+
+  checkRequest.execute( (
+    function(event) {
+      return function(request) {
+        if(request.code === 404) {
+          criaEvento(event);
+        } else {
+          alert("Evento já existe");
+        }
+      };
+    })(event) );
+}
+
 

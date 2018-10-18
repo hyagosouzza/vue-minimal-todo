@@ -58,7 +58,7 @@
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/google-drive.png"></button>
                 </div>
                 <div>
-                  <button onclick="startCalendar()" v-if="todo.completed === false" class="able" ><img src="src/assets/calendar-icon.png"></button>
+                  <button v-on:click="callCalendar(todo)" v-if="todo.completed === false" class="able" ><img src="src/assets/calendar-icon.png"></button>
                   <button v-if="todo.completed === true" class="disable" ><img src="src/assets/calendar-icon.png"></button>
                 </div>
                 <div><button v-on:click="removeTodo(todo)" type="button" class="flex items-center delete-button absolute pin-r">
@@ -137,6 +137,9 @@ export default {
     },
     removeTodo(todo) {
       this.todos.splice(this.todos.indexOf(todo), 1);
+    },
+    callCalendar(todo) {
+      startCalendar(todo);
     }
   },
 
