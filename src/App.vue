@@ -54,6 +54,10 @@
               </div>
               <div class="flex justify-end">
                 <div>
+                  <button class="able"><img src="src/assets/edit.png"></button>
+                  <modal></modal>
+                </div>
+                <div>
                   <button onclick="startDrive()" v-if="todo.completed === false" class="able"><img src="src/assets/google-drive.png"></button>
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/google-drive.png"></button>
                 </div>
@@ -80,6 +84,7 @@
 <script>
 const STORAGE_KEY = "todo-storage";
 var now = new Date();
+import Modal from './components/Modal.vue'
 import Datepicker from "vuejs-datepicker";
 import { ptBR } from "vuejs-datepicker/dist/locale";
 
@@ -87,6 +92,7 @@ export default {
   name: "app",
   //Componente do calendário para prazo de conclusão
   components: {
+    Modal,
     Datepicker
   },
   data() {
