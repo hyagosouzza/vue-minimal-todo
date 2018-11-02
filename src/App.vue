@@ -54,7 +54,7 @@
               </div>
               <div class="flex justify-end">
                 <div>
-                  <button v-if="todo.completed === false" data-toggle="modal" data-target="#exampleModal" class="able"><img src="src/assets/edit.png"></button>
+                  <button v-on:click="gravarNome(todo.title)" v-if="todo.completed === false" data-toggle="modal" data-target="#exampleModal" class="able"><img src="src/assets/edit.png"></button>
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/edit.png"></button>
                   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -72,8 +72,8 @@
                           
                         </div>
                         <div class="modal-footer">
-                          <button v-on:click="mudarNewTitle(todo, newTitle)" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button v-on:click="editarTodo(todo, newTitle)" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                          <button v-on:click="mudarNewTitle(newTitle)" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button v-on:click="editarTodo(newTitle)" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
                         </div>
                       </div>
                     </div>
@@ -121,6 +121,7 @@ export default {
       ptBR: ptBR,
       newTodo: "",
       newTitle: "",
+      nomeAtual: "",
       todos: [],
       show_guide: false,
       checked: false,
@@ -175,17 +176,26 @@ export default {
       this.checked = false;
     },
     //Editar tarefa
-    editarTodo(todo, newTitle){
-      console.log(todo.title);
+    editarTodo(newTitle){
       if (this.newTitle.length) {
-          todo.title = newTitle;
+          var contador = 0;
+          for(contador = 0; this.todos.length; contador ++){
+            if(this.todos[contador].title == this.nomeAtual){
+              this.todos[contador].title = newTitle;
+              break;
+            }
+          }
         }
       this.newTitle = "";
+      this.nomeAtual = "";
     },
     //Mudar valor de newTitle
-    mudarNewTitle(todo, newTitle){
-      console.log(todo.title);
+    mudarNewTitle(newTitle){
       this.newTitle = "";
+    },
+    //Salvar title do todo clicado
+    gravarNome(nome){
+      this.nomeAtual = nome;
     },
     //Remove tarefa e seu evento
     removeTodo(todo) {
