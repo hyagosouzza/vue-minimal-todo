@@ -197,6 +197,10 @@ export default {
             }
           }
         }
+      console.log("Numero do contador: "+contador);
+      removeEvento(this.todos[contador]);
+      this.todos[contador].eventoAdd = false;
+      addEvent(this.todos[contador]);
       this.newTitle = "";
       this.nomeAtual = "";
       this.checked2 = false;
