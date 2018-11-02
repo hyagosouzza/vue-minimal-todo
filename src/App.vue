@@ -47,15 +47,37 @@
                 <div>
                   <input type="checkbox" :id="todo.id" class="cbx hidden" v-model="todo.completed">
                   <label :for="todo.id" class="text-xl cbx__child"></label>
-                  <label :for="todo.id" class="cbx__lbl text-white inline-block mt-1" :class="{ completed: todo.completed }">{{ todo.title }}</label>
+                  <label class="cbx__lbl text-white inline-block mt-1" :class="{ completed: todo.completed }">{{ todo.title }}</label>
                   <br>
-                  <label style="font-size:10px;font-style:italic;" :for="todo.id" class="cbx__lbl text-yellow-dark inline-block mt-1" :class="{ completed: todo.completed }">{{todo.date}} <span class="text-green-dark" v-if="todo.prazo">até</span> {{todo.prazo}}</label>
+                  <label style="font-size:10px;font-style:italic;" class="cbx__lbl text-yellow-dark inline-block mt-1" :class="{ completed: todo.completed }">{{todo.date}} <span class="text-green-dark" v-if="todo.prazo">até</span> {{todo.prazo}}</label>
                 </div>
               </div>
               <div class="flex justify-end">
                 <div>
-                  <button class="able"><img src="src/assets/edit.png"></button>
-                  <modal></modal>
+                  <button v-if="todo.completed === false" data-toggle="modal" data-target="#exampleModal" class="able"><img src="src/assets/edit.png"></button>
+                  <button v-if="todo.completed === true" class="disable"><img src="src/assets/edit.png"></button>
+                  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Editar Tarefa</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <input type="text"
+                            v-model="newTitle"
+                            placeholder="Novo Nome">
+                          
+                        </div>
+                        <div class="modal-footer">
+                          <button v-on:click="mudarNewTitle(todo, newTitle)" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button v-on:click="editarTodo(todo, newTitle)" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <button onclick="startDrive()" v-if="todo.completed === false" class="able"><img src="src/assets/google-drive.png"></button>
@@ -75,7 +97,6 @@
             </li>          
           </transition-group>
         </ul>
-
       </div>
     </div>
   </div>
@@ -84,7 +105,6 @@
 <script>
 const STORAGE_KEY = "todo-storage";
 var now = new Date();
-import Modal from './components/Modal.vue'
 import Datepicker from "vuejs-datepicker";
 import { ptBR } from "vuejs-datepicker/dist/locale";
 
@@ -92,14 +112,15 @@ export default {
   name: "app",
   //Componente do calendário para prazo de conclusão
   components: {
-    Modal,
     Datepicker
   },
   data() {
     return {
       //Dados globais
+      showModal: false,
       ptBR: ptBR,
       newTodo: "",
+      newTitle: "",
       todos: [],
       show_guide: false,
       checked: false,
@@ -153,6 +174,19 @@ export default {
       this.prazo = "";
       this.checked = false;
     },
+    //Editar tarefa
+    editarTodo(todo, newTitle){
+      console.log(todo.title);
+      if (this.newTitle.length) {
+          todo.title = newTitle;
+        }
+      this.newTitle = "";
+    },
+    //Mudar valor de newTitle
+    mudarNewTitle(todo, newTitle){
+      console.log(todo.title);
+      this.newTitle = "";
+    },
     //Remove tarefa e seu evento
     removeTodo(todo) {
       if (todo.eventoAdd === true) {
@@ -185,6 +219,70 @@ export default {
 
 <style lang="scss">
 $c-primary: #1dd1a1;
+
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  width: 300px;
+  margin: 0px auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.modal-header h3 {
+  margin-top: 0;
+  color: #42b983;
+}
+
+.modal-body {
+  margin: 20px 0;
+}
+
+.modal-default-button {
+  float: right;
+}
+
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
 
 #login:hover {
   opacity: 0.8;
