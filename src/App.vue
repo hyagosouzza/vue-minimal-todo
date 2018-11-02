@@ -135,7 +135,8 @@ export default {
       show_guide: false,
       checked: false,
       checked2: false,
-      prazo: ""
+      prazo: "",
+      newPrazo: ""
     };
   },
 
@@ -189,12 +190,16 @@ export default {
     editarTodo(newTitle, newPrazo){
       if (this.newTitle.length || !(this.newPrazo === "")) {
           var contador = 0;
+
           for(contador = 0; this.todos.length; contador ++){
-            if (this.todos[contador].title == this.nomeAtual){
+            if (this.todos[contador].title === this.nomeAtual){
               if (!(this.newTitle.length) && !(this.newPrazo === "")){
                 this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
               }
-              else {
+              else if (this.newTitle.length && (this.newPrazo === "")){
+                this.todos[contador].title = newTitle;
+              }
+              else{
                 this.todos[contador].title = newTitle;
                 this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
               }
@@ -202,14 +207,19 @@ export default {
             }
           }
         }
-      removeEvento(this.todos[contador]);
-      this.todos[contador].eventoAdd = false;
-      addEvent(this.todos[contador]);
+
+      if (this.todos[contador].eventoAdd) {
+        removeEvento(this.todos[contador]);
+        this.todos[contador].eventoAdd = false;
+        addEvent(this.todos[contador]);
+      }
+
       this.newTitle = "";
       this.nomeAtual = "";
       this.checked2 = false;
+      this.newPrazo = "";
     },
-    //Mudar valor de newTitle
+    //Set false em newTitle e checked2
     mudarVars(){
       this.newTitle = "";
       this.checked2 = false;
