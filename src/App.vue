@@ -61,7 +61,7 @@
                       <div class="modal-content">
                         <div class="modal-header">
                           <h5 class="modal-title" id="exampleModalLabel">Editar Tarefa</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <button v-on:click="mudarVars()" type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div>
@@ -69,11 +69,20 @@
                           <input type="text"
                             v-model="newTitle"
                             placeholder="Novo Nome">
+                          <input type="checkbox" id="checkbox" v-model="checked2">
+                            <label class="text-black">Mudar prazo de conclusão?</label>
+                            <br>
+                            <br>
+                            <datepicker :language="ptBR"
+                                  v-if="checked2 === true"
+                                  v-model="newPrazo"
+                                  class="txt-black"
+                                  placeholder="Prazo de conclusão"></datepicker>
                           
                         </div>
                         <div class="modal-footer">
-                          <button v-on:click="mudarNewTitle(newTitle)" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button v-on:click="editarTodo(newTitle)" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                          <button v-on:click="mudarVars()" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button v-on:click="editarTodo(newTitle, newPrazo)" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
                         </div>
                       </div>
                     </div>
@@ -125,6 +134,7 @@ export default {
       todos: [],
       show_guide: false,
       checked: false,
+      checked2: false,
       prazo: ""
     };
   },
@@ -176,22 +186,25 @@ export default {
       this.checked = false;
     },
     //Editar tarefa
-    editarTodo(newTitle){
+    editarTodo(newTitle, newPrazo){
       if (this.newTitle.length) {
           var contador = 0;
           for(contador = 0; this.todos.length; contador ++){
             if(this.todos[contador].title == this.nomeAtual){
               this.todos[contador].title = newTitle;
+              this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
               break;
             }
           }
         }
       this.newTitle = "";
       this.nomeAtual = "";
+      this.checked2 = false;
     },
     //Mudar valor de newTitle
-    mudarNewTitle(newTitle){
+    mudarVars(){
       this.newTitle = "";
+      this.checked2 = false;
     },
     //Salvar title do todo clicado
     gravarNome(nome){
