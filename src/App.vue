@@ -187,17 +187,21 @@ export default {
     },
     //Editar tarefa
     editarTodo(newTitle, newPrazo){
-      if (this.newTitle.length) {
+      if (this.newTitle.length || !(this.newPrazo === "")) {
           var contador = 0;
           for(contador = 0; this.todos.length; contador ++){
-            if(this.todos[contador].title == this.nomeAtual){
-              this.todos[contador].title = newTitle;
-              this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+            if (this.todos[contador].title == this.nomeAtual){
+              if (!(this.newTitle.length) && !(this.newPrazo === "")){
+                this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+              }
+              else {
+                this.todos[contador].title = newTitle;
+                this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+              }
               break;
             }
           }
         }
-      console.log("Numero do contador: "+contador);
       removeEvento(this.todos[contador]);
       this.todos[contador].eventoAdd = false;
       addEvent(this.todos[contador]);
@@ -320,7 +324,7 @@ $c-primary: #1dd1a1;
   div {
     input {
       background-color: transparent;
-      color: white;
+      color:dimgray;
       border: solid white 1px;
       border-radius: 5px;
     }
