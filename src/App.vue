@@ -81,8 +81,8 @@
                           
                         </div>
                         <div class="modal-footer">
-                          <button v-on:click="mudarVars()" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                          <button v-on:click="editarTodo(newTitle, newPrazo)" type="button" class="btn btn-primary" data-dismiss="modal">Salvar Alterações</button>
+                          <button v-on:click="mudarVars()" type="button" class="bg-red hover:bg-red-dark text-white font-bold py-2 px-4 rounded" data-dismiss="modal">Fechar</button>
+                          <button v-on:click="editarTodo(newTitle, newPrazo)" type="button" class="bg-green hover:bg-green-dark text-white font-bold py-2 px-4 rounded" data-dismiss="modal">Salvar Alterações</button>
                         </div>
                       </div>
                     </div>
@@ -136,7 +136,7 @@ export default {
       checked: false,
       checked2: false,
       prazo: "",
-      newPrazo: ""
+      newPrazo: "",
     };
   },
 
