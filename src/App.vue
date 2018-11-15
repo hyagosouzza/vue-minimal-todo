@@ -52,13 +52,20 @@
                   <label style="font-size:10px;font-style:italic;" class="cbx__lbl text-yellow-dark inline-block mt-1" :class="{ completed: todo.completed }">{{todo.date}} <span class="text-green-dark" v-if="todo.prazo">até</span> {{todo.prazo}}</label>
                 </div>
               </div>
+              <div class="flex justify-center">
+                  <p><a target="_blank"
+                    v-bind:href="todo.driveLink" v-if="todo.driveLink != '' && todo.completed === false"><button class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-1 text-xs rounded">{{todo.driveNome}}</button></a></p>
+                  <p class="disable"><a target="_blank"
+                    v-bind:href="todo.driveLink" v-if="todo.driveLink != '' && todo.completed === true"><button class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-1 text-xs rounded">{{todo.driveNome}}</button></a></p>
+              </div>
               <div class="flex justify-end">
                 <div>
                   <button v-on:click="gravarNome(todo.title)" v-if="todo.completed === false" @click="toggleModal" class="able"><img src="src/assets/edit.png"></button>
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/edit.png"></button>
                   <div v-if="modal" @click.self="toggleModal" class="animated fadeIn fixed z-50 pin overflow-auto bg-smoke-dark flex">
                     <div class="animated fadeInUp fixed shadow-inner max-w-md md:relative pin-b pin-x align-top m-auto justify-end md:justify-center p-8 bg-white md:rounded w-full md:h-auto md:shadow flex flex-col">
-                      <h2 class="text-4xl text-center font-hairline md:leading-loose text-grey md:mt-8 mb-4">Editar Tarefa</h2>
+                      <h2 style="border-bottom: 1px solid gray" class="text-4xl text-center font-bold font-hairline md:leading-loose text-blue md:mt-8 mb-4">Editar Tarefa</h2>
+                      <br>
                       <p class="text-xl leading-normal mb-8 text-center">
                         <input type="text"
                                v-model="newTitle"
@@ -73,7 +80,7 @@
                                     class="txt-black"
                                     placeholder="Prazo de conclusão"></datepicker>
                       </p>
-                      <div class="inline-flex justify-center">
+                      <div  class="inline-flex justify-center">
                         <button v-on:click="mudarVars()" @click="toggleModal" type="button" class="bg-grey-lighter flex-1 md:flex-none border-b-2 border-red ml-2 hover:bg-red-lightest text-grey-darkest font-bold py-4 px-6 rounded" data-dismiss="modal">Sair</button>
                         <button v-on:click="editarTodo(newTitle, newPrazo)" @click="toggleModal" type="button" class="bg-grey-lighter flex-1 border-b-2 md:flex-none border-green ml-2 hover:bg-green-lightest text-grey-darkest font-bold py-4 px-6 rounded" data-dismiss="modal">Salvar</button>
 
@@ -85,9 +92,8 @@
                   </div>
                 </div>
                 <div>
-                  <button id="pick" v-if="todo.completed === false" class="able"><img src="src/assets/google-drive.png"></button>
+                  <button v-on:click="callDrive(todo)" id="pick" v-if="todo.completed === false" class="able"><img src="src/assets/google-drive.png"></button>
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/google-drive.png"></button>
-
                 </div>
                 <div>
                   <button class="able" v-on:click="callCalendar(todo)" v-if="todo.eventoAdd === false"><img src="src/assets/calendar-icon.png"></button>
@@ -98,6 +104,7 @@
                 <div><button v-on:click="removeTodo(todo)" type="button" class="flex items-center delete-button absolute pin-r">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   </button></div>
+
               </div>
             </li>
           </transition-group>
@@ -133,13 +140,14 @@ export default {
       checked: false,
       checked2: false,
       prazo: "",
-      newPrazo: "",
+      todoIdAux: null,
+      newPrazo: ""
     };
   },
 
   methods: {
     toggleModal() {
-      this.modal = !this.modal
+      this.modal = !this.modal;
     },
     //Adiciona tarefa
     addTodo() {
@@ -150,6 +158,8 @@ export default {
             title: this.newTodo,
             completed: false,
             eventoAdd: false,
+            driveLink: "",
+            driveNome: "",
             eventoLink: "",
             eventoId: "",
             date:
@@ -169,6 +179,8 @@ export default {
             title: this.newTodo,
             completed: false,
             eventoAdd: false,
+            driveLink: "",
+            driveNome: "",
             eventoLink: "",
             eventoId: "",
             date:
@@ -187,26 +199,24 @@ export default {
       this.checked = false;
     },
     //Editar tarefa
-    editarTodo(newTitle, newPrazo){
+    editarTodo(newTitle, newPrazo) {
       if (this.newTitle.length || !(this.newPrazo === "")) {
-          var contador = 0;
+        var contador = 0;
 
-          for(contador = 0; this.todos.length; contador ++){
-            if (this.todos[contador].title === this.nomeAtual){
-              if (!(this.newTitle.length) && !(this.newPrazo === "")){
-                this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
-              }
-              else if (this.newTitle.length && (this.newPrazo === "")){
-                this.todos[contador].title = newTitle;
-              }
-              else{
-                this.todos[contador].title = newTitle;
-                this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
-              }
-              break;
+        for (contador = 0; this.todos.length; contador++) {
+          if (this.todos[contador].title === this.nomeAtual) {
+            if (!this.newTitle.length && !(this.newPrazo === "")) {
+              this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+            } else if (this.newTitle.length && this.newPrazo === "") {
+              this.todos[contador].title = newTitle;
+            } else {
+              this.todos[contador].title = newTitle;
+              this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
             }
+            break;
           }
         }
+      }
 
       if (this.todos[contador].eventoAdd) {
         removeEvento(this.todos[contador]);
@@ -220,13 +230,13 @@ export default {
       this.newPrazo = "";
     },
     //Set false em newTitle e checked2
-    mudarVars(){
+    mudarVars() {
       this.newTitle = "";
       this.checked2 = false;
       this.newPrazo = "";
     },
     //Salvar title do todo clicado
-    gravarNome(nome){
+    gravarNome(nome) {
       this.nomeAtual = nome;
     },
     //Remove tarefa e seu evento
@@ -240,6 +250,45 @@ export default {
     //Chama o Calendar para logar ou add evento
     callCalendar(todo) {
       startCalendar(todo);
+    },
+    callDrive(todo) {
+      this.todoIdAux = todo.id;
+      if (updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())) {
+        var oauthToken = gapi.auth2.getAuthInstance().currentUser.Ab.Zi
+          .access_token;
+        if (
+          updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get()) &&
+          oauthToken
+        ) {
+          var picker = new google.picker.PickerBuilder()
+            .addView(google.picker.ViewId.DOCUMENTS)
+            .setOAuthToken(oauthToken)
+            .setDeveloperKey(API_KEY)
+            .setCallback(this.pickerCallback)
+            .build();
+          picker.setVisible(true);
+        }
+      } else {
+        handleAuthClick();
+      }
+    },
+    pickerCallback(data) {
+      var url = "nothing";
+      var nome = "";
+      if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+        var doc = data[google.picker.Response.DOCUMENTS][0];
+        url = doc[google.picker.Document.URL];
+        nome = doc[google.picker.Document.NAME];
+      }
+      for (var i = 0, len = this.todos.length; i < len; ++i) {
+        console.log(this.todos[i]);
+        if(this.todoIdAux === this.todos[i].id) {
+          this.todos[i].driveLink = url;
+          this.todos[i].driveNome = nome;
+        }
+      }
+      var message = "You picked: " + url;
+      console.log(message);
     }
   },
 
@@ -335,7 +384,7 @@ $c-primary: #1dd1a1;
   div {
     input {
       background-color: transparent;
-      color:dimgray;
+      color: dimgray;
       border: solid white 1px;
       border-radius: 5px;
     }

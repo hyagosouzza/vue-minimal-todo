@@ -3,11 +3,12 @@ var CLIENT_ID = '272434584361-13ac1lmsqg4esrn1mnuagpso0obgjl3v.apps.googleuserco
 var API_KEY = 'AIzaSyDzR0gTVm3WFHXQmEl1bUxehr3L1CmlmhM';
 
 // Array of API discovery doc URLs for APIs used by the quickstart
-var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest", "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-var SCOPES = "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/calendar";
+var SCOPES = "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/drive";
+var oauthToken;
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -27,21 +28,13 @@ function initClient() {
     discoveryDocs: DISCOVERY_DOCS,
     scope: SCOPES
   }).then(function () {
+    gapi.load('picker');
     // Listen for sign-in state changes.
     gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
     // Handle the initial sign-in state.
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
   });
-}
-
-//Se usuário ja estiver logado, drive, senão, loga
-function startDrive() {
-  if (updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get())) {
-    listFiles();
-  } else {
-    handleAuthClick();
-  }
 }
 
 //Verifica se usuário está logado
@@ -52,6 +45,9 @@ function updateSigninStatus(isSignedIn) {
     return false;
   }
 }
+
+// A simple callback implementation.
+ 
 
 /**
  *  Sign in the user upon button click.
@@ -68,6 +64,7 @@ function startCalendar(todo) {
     handleAuthClick();
   }
 }
+
 
 //Cria o Evento no Google Calendar
 function criaEvento(event, todo) {
@@ -123,11 +120,4 @@ function removeEvento(todo) {
   request.execute(function (event) {
     console.log('Event deleted: ' + todo.title);
   });
-}
-
-/**
- * Print files.
- */
-function listFiles() {
-  console.log('Drive');
 }
