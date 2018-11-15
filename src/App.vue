@@ -54,12 +54,40 @@
               </div>
               <div class="flex justify-end">
                 <div>
-                  <button v-on:click="gravarNome(todo.title)" v-if="todo.completed === false" data-toggle="modal" data-target="#exampleModal" class="able"><img src="src/assets/edit.png"></button>
+                  <button v-on:click="gravarNome(todo.title)" v-if="todo.completed === false" @click="toggleModal" class="able"><img src="src/assets/edit.png"></button>
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/edit.png"></button>
+                  <div v-if="modal" @click.self="toggleModal" class="animated fadeIn fixed z-50 pin overflow-auto bg-smoke-dark flex">
+                    <div class="animated fadeInUp fixed shadow-inner max-w-md md:relative pin-b pin-x align-top m-auto justify-end md:justify-center p-8 bg-white md:rounded w-full md:h-auto md:shadow flex flex-col">
+                      <h2 class="text-4xl text-center font-hairline md:leading-loose text-grey md:mt-8 mb-4">Editar Tarefa</h2>
+                      <p class="text-xl leading-normal mb-8 text-center">
+                        <input type="text"
+                               v-model="newTitle"
+                               placeholder="Novo Nome">
+                        <input type="checkbox" id="checkbox" v-model="checked2">
+                        <label class="text-black">Mudar prazo de conclusão?</label>
+                        <br>
+                        <br>
+                        <datepicker :language="ptBR"
+                                    v-if="checked2 === true"
+                                    v-model="newPrazo"
+                                    class="txt-black"
+                                    placeholder="Prazo de conclusão"></datepicker>
+                      </p>
+                      <div class="inline-flex justify-center">
+                        <button v-on:click="mudarVars()" @click="toggleModal" type="button" class="bg-grey-lighter flex-1 md:flex-none border-b-2 border-red ml-2 hover:bg-red-lightest text-grey-darkest font-bold py-4 px-6 rounded" data-dismiss="modal">Sair</button>
+                        <button v-on:click="editarTodo(newTitle, newPrazo)" @click="toggleModal" type="button" class="bg-grey-lighter flex-1 border-b-2 md:flex-none border-green ml-2 hover:bg-green-lightest text-grey-darkest font-bold py-4 px-6 rounded" data-dismiss="modal">Salvar</button>
+
+                      </div>
+                      <span v-on:click="mudarVars()" @click="toggleModal" class="absolute pin-t pin-r pt-4 px-4">
+                        <svg class="h-12 w-12 text-grey hover:text-grey-darkest" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Fechar</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                    </span>
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <button id="pick" v-if="todo.completed === false" class="able"><img src="src/assets/google-drive.png"></button>
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/google-drive.png"></button>
+
                 </div>
                 <div>
                   <button class="able" v-on:click="callCalendar(todo)" v-if="todo.eventoAdd === false"><img src="src/assets/calendar-icon.png"></button>
@@ -71,10 +99,10 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   </button></div>
               </div>
-
             </li>
           </transition-group>
         </ul>
+
       </div>
     </div>
   </div>
@@ -95,7 +123,7 @@ export default {
   data() {
     return {
       //Dados globais
-      showModal: false,
+      modal: false,
       ptBR: ptBR,
       newTodo: "",
       newTitle: "",
@@ -110,6 +138,9 @@ export default {
   },
 
   methods: {
+    toggleModal() {
+      this.modal = !this.modal
+    },
     //Adiciona tarefa
     addTodo() {
       //Se não tiver prazo de conclusão
@@ -192,6 +223,7 @@ export default {
     mudarVars(){
       this.newTitle = "";
       this.checked2 = false;
+      this.newPrazo = "";
     },
     //Salvar title do todo clicado
     gravarNome(nome){
