@@ -81,8 +81,8 @@
                           
                         </div>
                         <div class="modal-footer">
-                          <button v-on:click="mudarVars()" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button v-on:click="editarTodo(newTitle, newPrazo)" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                          <button v-on:click="mudarVars()" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                          <button v-on:click="editarTodo(newTitle, newPrazo)" type="button" class="btn btn-primary" data-dismiss="modal">Salvar Alterações</button>
                         </div>
                       </div>
                     </div>
