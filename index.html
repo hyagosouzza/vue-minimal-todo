@@ -18,25 +18,42 @@
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Raleway:300,400" rel="stylesheet">
-  <!-- Bootstrap CSS - Modal-->
-  <link rel="stylesheet" href="./style.css">
-
 </head>
 
 <body class="bg-black">
 
   <div id="app"></div>
 
+  <!-- Google Picker Files -->
+  <script src="filepicker.js"></script>
+  <script>
+    function initPicker() {
+      var picker = new FilePicker({
+        apiKey: 'AIzaSyDzR0gTVm3WFHXQmEl1bUxehr3L1CmlmhM',
+        clientId: '272434584361-13ac1lmsqg4esrn1mnuagpso0obgjl3v.apps.googleusercontent.com',
+        buttonEl: document.getElementById('pick'),
+        onSelect: function(file) {
+          console.log(file);
+          alert('Selected ' + file.title);
+        }
+      });
+    }
+  </script>
+
+  <script src="https://www.google.com/jsapi?key=AIzaSyDzR0gTVm3WFHXQmEl1bUxehr3L1CmlmhM"></script>
+  <script src="https://apis.google.com/js/client.js?onload=initPicker"></script>
+
+  <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+
   <!-- Arquivos para Sign in e out -->
   <script src="src/signin.js"></script>
   <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
     onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+
   <!-- JS Build Script -->
   <script src="/dist/build.js"></script>
 

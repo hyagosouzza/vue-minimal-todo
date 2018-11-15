@@ -56,54 +56,23 @@
                 <div>
                   <button v-on:click="gravarNome(todo.title)" v-if="todo.completed === false" data-toggle="modal" data-target="#exampleModal" class="able"><img src="src/assets/edit.png"></button>
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/edit.png"></button>
-                  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel">Editar Tarefa</h5>
-                          <button v-on:click="mudarVars()" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <input type="text"
-                            v-model="newTitle"
-                            placeholder="Novo Nome">
-                          <input type="checkbox" id="checkbox" v-model="checked2">
-                            <label class="text-black">Mudar prazo de conclusão?</label>
-                            <br>
-                            <br>
-                            <datepicker :language="ptBR"
-                                  v-if="checked2 === true"
-                                  v-model="newPrazo"
-                                  class="txt-black"
-                                  placeholder="Prazo de conclusão"></datepicker>
-                          
-                        </div>
-                        <div class="modal-footer">
-                          <button v-on:click="mudarVars()" type="button" class="bg-red hover:bg-red-dark text-white font-bold py-2 px-4 rounded" data-dismiss="modal">Fechar</button>
-                          <button v-on:click="editarTodo(newTitle, newPrazo)" type="button" class="bg-green hover:bg-green-dark text-white font-bold py-2 px-4 rounded" data-dismiss="modal">Salvar Alterações</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
                 <div>
-                  <button onclick="startDrive()" v-if="todo.completed === false" class="able"><img src="src/assets/google-drive.png"></button>
+                  <button id="pick" v-if="todo.completed === false" class="able"><img src="src/assets/google-drive.png"></button>
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/google-drive.png"></button>
                 </div>
                 <div>
                   <button class="able" v-on:click="callCalendar(todo)" v-if="todo.eventoAdd === false"><img src="src/assets/calendar-icon.png"></button>
                   <a v-if="todo.eventoAdd === true" target="_blank"
                     v-bind:href="todo.eventoLink"><button><img src="src/assets/calendar-icon.png"></button></a>
-                    <p class="text-white text-xs" v-if="todo.eventoAdd === true">Evento Criado</p>             
+                    <p class="text-white text-xs" v-if="todo.eventoAdd === true">Evento Criado</p>
                 </div>
                 <div><button v-on:click="removeTodo(todo)" type="button" class="flex items-center delete-button absolute pin-r">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   </button></div>
               </div>
-              
-            </li>          
+
+            </li>
           </transition-group>
         </ul>
       </div>
