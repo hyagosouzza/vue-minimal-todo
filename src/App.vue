@@ -330,7 +330,7 @@ export default {
       this.checked2 = false;
       this.newPrazo = "";
       this.newDataI = "";
-      this.checked4;
+      this.checked4 = "";
     },
     //Salvar todo clicado
     gravarTarefa(nome, dataI, dataF) {
