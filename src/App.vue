@@ -25,8 +25,8 @@
                 v-model="newTodo"
                 placeholder="O que precisa ser feito?"
                 class="p-4 mb-4 w-full bg-transparent border-grey-light text-white border rounded">
-          <input type="checkbox" id="checkbox" v-model="checked3">
-          <label class="text-white" for="checkbox">Escolher data inicial.</label>
+          <input type="checkbox" id="dataInicio" v-model="checked3">
+          <label class="text-white" for="dataInicio">Escolher data inicial.</label>
           <br>
           <br>
           <datepicker :language="ptBR"
@@ -69,18 +69,25 @@
               </div>
               <div class="flex justify-end">
                 <div>
-                  <button v-on:click="gravarNome(todo.title)" v-if="todo.completed === false" @click="toggleModal" class="able"><img src="src/assets/edit.png"></button>
+                  <button v-on:click="gravarTarefa(todo.title, todo.date, todo.prazo)" v-if="todo.completed === false" @click="toggleModal" class="able"><img src="src/assets/edit.png"></button>
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/edit.png"></button>
                   <div v-if="modal" @click.self="toggleModal" class="animated fadeIn fixed z-50 pin overflow-auto bg-smoke-dark flex">
                     <div class="animated fadeInUp fixed shadow-inner max-w-md md:relative pin-b pin-x align-top m-auto justify-end md:justify-center p-8 bg-white md:rounded w-full md:h-auto md:shadow flex flex-col">
                       <h2 style="border-bottom: 1px solid gray" class="text-4xl text-center font-bold font-hairline md:leading-loose text-blue md:mt-8 mb-4">Editar Tarefa</h2>
+
+                      <h3 class="text-center">Nome atual: {{nomeAtual}}</h3>
+                      <h3 class="text-center">Data inicio: {{dataIAtual}}</h3>
+                      <h3 class="text-center">Data fim: {{dataFAtual}}</h3>
+                      <br>
                       <br>
                       <p class="text-xl leading-normal mb-8 text-center">
                         <input type="text"
                                v-model="newTitle"
-                               placeholder="Novo Nome">
-                        <input type="checkbox" id="checkbox" v-model="checked2">
-                        <label class="text-black">Mudar prazo de conclusão?</label>
+                               placeholder="Novo nome">
+                        <br>
+                        <br>
+                        <input type="checkbox" id="newPrazo" v-model="checked2">
+                        <label class="text-black" for="newPrazo">Mudar prazo de conclusão?</label>
                         <br>
                         <br>
                         <datepicker :language="ptBR"
@@ -144,6 +151,8 @@ export default {
       newTodo: "",
       newTitle: "",
       nomeAtual: "",
+      dataIAtual: "",
+      dataFAtual: "",
       todos: [],
       show_guide: false,
       checked: false,
@@ -283,9 +292,15 @@ export default {
       this.checked2 = false;
       this.newPrazo = "";
     },
-    //Salvar title do todo clicado
-    gravarNome(nome) {
+    //Salvar todo clicado
+    gravarTarefa(nome, dataI, dataF) {
       this.nomeAtual = nome;
+      this.dataIAtual = dataI;
+      if (dataF === ""){
+        this.dataFAtual = "Não possui prazo";
+      } else{
+        this.dataFAtual = dataF;
+      }
     },
     //Remove tarefa e seu evento
     removeTodo(todo) {
