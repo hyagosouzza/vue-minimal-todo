@@ -86,6 +86,16 @@
                                placeholder="Novo nome">
                         <br>
                         <br>
+                        <input type="checkbox" id="newDataI" v-model="checked4">
+                        <label class="text-black" for="newDataI">Mudar data inicial?</label>
+                        <br>
+                        <br>
+                        <datepicker :language="ptBR"
+                                    v-if="checked4 === true"
+                                    v-model="newDataI"
+                                    class="txt-black"
+                                    placeholder="Data Inicial"></datepicker>
+
                         <input type="checkbox" id="newPrazo" v-model="checked2">
                         <label class="text-black" for="newPrazo">Mudar prazo de conclusão?</label>
                         <br>
@@ -98,7 +108,7 @@
                       </p>
                       <div  class="inline-flex justify-center">
                         <button v-on:click="mudarVars()" @click="toggleModal" type="button" class="bg-grey-lighter flex-1 md:flex-none border-b-2 border-red ml-2 hover:bg-red-lightest text-grey-darkest font-bold py-4 px-6 rounded" data-dismiss="modal">Sair</button>
-                        <button v-on:click="editarTodo(newTitle, newPrazo)" @click="toggleModal" type="button" class="bg-grey-lighter flex-1 border-b-2 md:flex-none border-green ml-2 hover:bg-green-lightest text-grey-darkest font-bold py-4 px-6 rounded" data-dismiss="modal">Salvar</button>
+                        <button v-on:click="editarTodo(newTitle, newDataI, newPrazo)" @click="toggleModal" type="button" class="bg-grey-lighter flex-1 border-b-2 md:flex-none border-green ml-2 hover:bg-green-lightest text-grey-darkest font-bold py-4 px-6 rounded" data-dismiss="modal">Salvar</button>
 
                       </div>
                       <span v-on:click="mudarVars()" @click="toggleModal" class="absolute pin-t pin-r pt-4 px-4">
@@ -158,9 +168,11 @@ export default {
       checked: false,
       checked2: false,
       checked3: false,
+      checked4: false,
       dataInicio: "",
       prazo: "",
       todoIdAux: null,
+      newDataI: "",
       newPrazo: ""
     };
   },
@@ -256,18 +268,42 @@ export default {
       this.dataInicio = "";
     },
     //Editar tarefa
-    editarTodo(newTitle, newPrazo) {
-      if (this.newTitle.length || !(this.newPrazo === "")) {
+    editarTodo(newTitle, newDataI, newPrazo) {
+      if (this.newTitle.length || !(this.newPrazo === "") || !(this.newDataI === "")) {
         var contador = 0;
+
+        console.log("NOME NOVO: " + newTitle);
+        console.log("DATAI NOVO: " + newDataI);
+        console.log("PRAZO NOVO: " + newPrazo);
 
         for (contador = 0; this.todos.length; contador++) {
           if (this.todos[contador].title === this.nomeAtual) {
-            if (!this.newTitle.length && !(this.newPrazo === "")) {
+
+            if ((this.newTitle.length) && (this.newDataI === "") && (this.newPrazo == "")){
+              console.log("1");
+              this.todos[contador].title = newTitle;
+            }else if ((this.newTitle.length) && !(this.newDataI === "") && (this.newPrazo === "")){
+              console.log("2");
+              this.todos[contador].title = newTitle;
+              this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+            } else if ((this.newTitle.length) && (this.newDataI === "") && !(this.newPrazo === "")){
+              console.log("3");
+              this.todos[contador].title = newTitle;
               this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
-            } else if (this.newTitle.length && this.newPrazo === "") {
+            } else if (!(this.newTitle.length) && !(this.newDataI === "") && (this.newPrazo === "")){
+              console.log("4");
+              this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+            } else if (!(this.newTitle.length) && !(this.newDataI === "") && !(this.newPrazo === "")){
+              console.log("5");
+              this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+              this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+            } else if (!(this.newTitle.length) && (this.newDataI === "") && !(this.newPrazo === "")){
+              console.log("6");
+              this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+            } else if ((this.newTitle) && !(this.newDataI === "") && !(this.newPrazo === "")){
+              console.log("7");
               this.todos[contador].title = newTitle;
-            } else {
-              this.todos[contador].title = newTitle;
+              this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
               this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
             }
             break;
@@ -285,12 +321,16 @@ export default {
       this.nomeAtual = "";
       this.checked2 = false;
       this.newPrazo = "";
+      this.newDataI = "";
+      this.checked4 = "";
     },
     //Set false em newTitle e checked2
     mudarVars() {
       this.newTitle = "";
       this.checked2 = false;
       this.newPrazo = "";
+      this.newDataI = "";
+      this.checked4;
     },
     //Salvar todo clicado
     gravarTarefa(nome, dataI, dataF) {
