@@ -90,6 +90,9 @@ function addEvent(todo) {
 
   if (todo.prazo != "") {
     var splitAte = todo.prazo.split("/");
+    var dataInt = parseInt(splitAte[0]);
+    dataInt = dataInt + 1;
+    splitAte[0] = dataInt.toString();
     dataAte = splitAte[2] + "-" + splitAte[1] + "-" + splitAte[0];
   } else {
     dataAte = dataDe;

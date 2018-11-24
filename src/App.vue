@@ -15,7 +15,6 @@
             <img src="/src/assets/logo.svg" class="hidden md:block" width="40" alt="">
           </div>
           <div class="flex items-center mb-6">
-            <button id="login" onclick="handleAuthClick()" class="flex items-center text-white font-bold" style="padding: 5px"><img style="padding-right:5px" src="/src/assets/google-icon.png">Log In</button>
           </div>
         </div>
         
@@ -26,6 +25,16 @@
                 v-model="newTodo"
                 placeholder="O que precisa ser feito?"
                 class="p-4 mb-4 w-full bg-transparent border-grey-light text-white border rounded">
+          <input type="checkbox" id="checkbox" v-model="checked3">
+          <label class="text-white" for="checkbox">Escolher data inicial.</label>
+          <br>
+          <br>
+          <datepicker :language="ptBR"
+                      v-if="checked3 === true"
+                      v-model="dataInicio"
+                      placeholder="Data de inicio"></datepicker>
+          <br>
+
           <input type="checkbox" id="checkbox" v-model="checked">
           <label class="text-white" for="checkbox">Tarefa com prazo de conclusão.</label>
           <br>
@@ -139,6 +148,8 @@ export default {
       show_guide: false,
       checked: false,
       checked2: false,
+      checked3: false,
+      dataInicio: "",
       prazo: "",
       todoIdAux: null,
       newPrazo: ""
@@ -152,51 +163,88 @@ export default {
     //Adiciona tarefa
     addTodo() {
       //Se não tiver prazo de conclusão
-      if (this.prazo === "") {
-        if (this.newTodo.length) {
-          this.todos.push({
-            title: this.newTodo,
-            completed: false,
-            eventoAdd: false,
-            driveLink: "",
-            driveNome: "",
-            eventoLink: "",
-            eventoId: "",
-            date:
-              now.getDate() +
-              "/" +
-              (now.getMonth() + 1) +
-              "/" +
-              now.getFullYear(),
-            id: this.todos.length,
-            prazo: ""
-          });
+      if (this.dataInicio === "") {
+        if (this.prazo === "") {
+          if (this.newTodo.length) {
+            this.todos.push({
+              title: this.newTodo,
+              completed: false,
+              eventoAdd: false,
+              driveLink: "",
+              driveNome: "",
+              eventoLink: "",
+              eventoId: "",
+              date:
+                now.getDate() +
+                "/" +
+                (now.getMonth() + 1) +
+                "/" +
+                now.getFullYear(),
+              id: this.todos.length,
+              prazo: ""
+            });
+          }
+          //Se tiver prazo de conclusão
+        } else {
+          if (this.newTodo.length) {
+            this.todos.push({
+              title: this.newTodo,
+              completed: false,
+              eventoAdd: false,
+              driveLink: "",
+              driveNome: "",
+              eventoLink: "",
+              eventoId: "",
+              date:
+                now.getDate() +
+                "/" +
+                (now.getMonth() + 1) +
+                "/" +
+                now.getFullYear(),
+              id: this.todos.length,
+              prazo: this.prazo.toLocaleDateString("pt-BR")
+            });
+          }
         }
-        //Se tiver prazo de conclusão
-      } else {
-        if (this.newTodo.length) {
-          this.todos.push({
-            title: this.newTodo,
-            completed: false,
-            eventoAdd: false,
-            driveLink: "",
-            driveNome: "",
-            eventoLink: "",
-            eventoId: "",
-            date:
-              now.getDate() +
-              "/" +
-              (now.getMonth() + 1) +
-              "/" +
-              now.getFullYear(),
-            id: this.todos.length,
-            prazo: this.prazo.toLocaleDateString("pt-BR")
-          });
+     } else{
+        if (this.prazo === "") {
+          if (this.newTodo.length) {
+            this.todos.push({
+              title: this.newTodo,
+              completed: false,
+              eventoAdd: false,
+              driveLink: "",
+              driveNome: "",
+              eventoLink: "",
+              eventoId: "",
+              date: this.dataInicio.toLocaleDateString("pt-BR"),
+              id: this.todos.length,
+              prazo: ""
+            });
+          }
+          //Se tiver prazo de conclusão
+        } else {
+          if (this.newTodo.length) {
+            this.todos.push({
+              title: this.newTodo,
+              completed: false,
+              eventoAdd: false,
+              driveLink: "",
+              driveNome: "",
+              eventoLink: "",
+              eventoId: "",
+              date: this.dataInicio.toLocaleDateString("pt-BR"),
+              id: this.todos.length,
+              prazo: this.prazo.toLocaleDateString("pt-BR")
+            });
+          }
         }
       }
       this.newTodo = "";
       this.prazo = "";
       this.checked = false;
+      this.checked3= false;
+      this.dataInicio = "";
     },
     //Editar tarefa
     editarTodo(newTitle, newPrazo) {
@@ -261,7 +309,7 @@ export default {
           oauthToken
         ) {
           var picker = new google.picker.PickerBuilder()
-            .addView(google.picker.ViewId.DOCUMENTS)
+            .addView(google.picker.ViewId.DOCS)
             .setOAuthToken(oauthToken)
             .setDeveloperKey(API_KEY)
             .setCallback(this.pickerCallback)
