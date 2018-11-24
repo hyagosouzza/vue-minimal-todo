@@ -88,11 +88,47 @@ function addEvent(todo) {
   var dataDe = splitDe[2] + "-" + splitDe[1] + "-" + splitDe[0];
   var dataAte;
 
+  console.log("VAI ADICIONAR NO CALENDAR");
+
   if (todo.prazo != "") {
     var splitAte = todo.prazo.split("/");
-    var dataInt = parseInt(splitAte[0]);
-    dataInt = dataInt + 1;
-    splitAte[0] = dataInt.toString();
+    var diaInt = parseInt(splitAte[0]);
+    var mesInt = parseInt(splitAte[1]);
+    var anoInt = parseInt(splitAte[2]);
+
+    if (diaInt === 30){
+      if ((mesInt === 4) || (mesInt === 6) || (mesInt === 9) || (mesInt === 11)){
+        diaInt = 1;
+        mesInt = mesInt + 1;
+      }
+    } else if (diaInt === 31){
+      if (mesInt === 12){
+        diaInt = 1;
+        mesInt = 1;
+        anoInt = anoInt + 1;
+      } else {
+        diaInt = 1;
+        mesInt = mesInt + 1;
+      }
+    } else if ((diaInt === 29) && (mesInt === 2)){
+      diaInt = 1;
+      mesInt = mesInt + 1;
+    } else if (diaInt === 28){
+      if ((mesInt === 2) && verifBissexto(anoInt)){
+        diaInt = diaInt + 1;
+      } else if ((mesInt === 2) && !(verifBissexto(anoInt))){
+        diaInt = 1;
+        mesInt = mesInt + 1;
+      } else{
+        diaInt = diaInt + 1;
+      }
+    } else {
+      diaInt = diaInt + 1;
+    }
+
+    splitAte[0] = diaInt.toString();
+    splitAte[1] = mesInt.toString();
+    splitAte[2] = anoInt.toString();
     dataAte = splitAte[2] + "-" + splitAte[1] + "-" + splitAte[0];
   } else {
     dataAte = dataDe;
@@ -123,4 +159,12 @@ function removeEvento(todo) {
   request.execute(function (event) {
     console.log('Event deleted: ' + todo.title);
   });
+}
+
+function verifBissexto(ano){
+  if (((ano % 4) === 0) && (!((ano % 100) === 0) || ((ano % 400) === 0))){
+    return true;
+  } else{
+    return false;
+  }
 }
