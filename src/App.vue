@@ -20,7 +20,7 @@
         
 
         <!-- New Todo Input -->
-        <div class="input-wrapper relative">
+        <div v-on:keyup.enter="addTodo" class="input-wrapper relative">
           <input type="text"
                 v-model="newTodo"
                 placeholder="O que precisa ser feito?"
@@ -43,8 +43,6 @@
                 v-if="checked === true"
                 v-model="prazo"
                 placeholder="Prazo de conclusão"></datepicker>
-
-          <button v-on:click="addTodo"><span class="text-guide text-white absolute text-xs">Enter</span></button>     
         </div>
       <br>
         <!-- To Do List -->    
@@ -173,7 +171,7 @@ export default {
       prazo: "",
       todoIdAux: null,
       newDataI: "",
-      newPrazo: ""
+      newPrazo: "",
     };
   },
 
@@ -207,24 +205,45 @@ export default {
           }
           //Se tiver prazo de conclusão
         } else {
-          if (this.newTodo.length) {
-            this.todos.push({
-              title: this.newTodo,
-              completed: false,
-              eventoAdd: false,
-              driveLink: "",
-              driveNome: "",
-              eventoLink: "",
-              eventoId: "",
-              date:
-                now.getDate() +
-                "/" +
-                (now.getMonth() + 1) +
-                "/" +
-                now.getFullYear(),
-              id: this.todos.length,
-              prazo: this.prazo.toLocaleDateString("pt-BR")
-            });
+          var dataAnalise = now.getDate() +
+            "/" +
+            (now.getMonth() + 1) +
+            "/" +
+            now.getFullYear();
+          var prazoAnalise = this.prazo.toLocaleDateString("pt-BR");
+          var splitDataAnalise = dataAnalise.split("/");
+          var splitPrazoAnalise = prazoAnalise.split("/");
+
+          if (splitDataAnalise[2] <= splitPrazoAnalise[2]){
+            if (splitDataAnalise[1] <= splitPrazoAnalise[1]){
+              if(splitDataAnalise[0] <= splitPrazoAnalise[0]){
+                if (this.newTodo.length) {
+                  this.todos.push({
+                    title: this.newTodo,
+                    completed: false,
+                    eventoAdd: false,
+                    driveLink: "",
+                    driveNome: "",
+                    eventoLink: "",
+                    eventoId: "",
+                    date:
+                      now.getDate() +
+                      "/" +
+                      (now.getMonth() + 1) +
+                      "/" +
+                      now.getFullYear(),
+                    id: this.todos.length,
+                    prazo: this.prazo.toLocaleDateString("pt-BR")
+                  });
+                }
+              } else {
+                this.alerta("Data prazo menor do que data inicial. EVENTO NÃO CRIADO");
+              }
+            } else {
+              this.alerta("Data prazo menor do que data inicial. EVENTO NÃO CRIADO");
+            }
+          } else {
+            this.alerta("Data prazo menor do que data inicial. EVENTO NÃO CRIADO");
           }
         }
      } else{
@@ -245,22 +264,40 @@ export default {
           }
           //Se tiver prazo de conclusão
         } else {
-          if (this.newTodo.length) {
-            this.todos.push({
-              title: this.newTodo,
-              completed: false,
-              eventoAdd: false,
-              driveLink: "",
-              driveNome: "",
-              eventoLink: "",
-              eventoId: "",
-              date: this.dataInicio.toLocaleDateString("pt-BR"),
-              id: this.todos.length,
-              prazo: this.prazo.toLocaleDateString("pt-BR")
-            });
+          var dataAnalise = this.dataInicio.toLocaleDateString("pt-BR");
+          var prazoAnalise = this.prazo.toLocaleDateString("pt-BR");
+          var splitDataAnalise = dataAnalise.split("/");
+          var splitPrazoAnalise = prazoAnalise.split("/");
+
+          if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
+            if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
+              if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+                if (this.newTodo.length) {
+                  this.todos.push({
+                    title: this.newTodo,
+                    completed: false,
+                    eventoAdd: false,
+                    driveLink: "",
+                    driveNome: "",
+                    eventoLink: "",
+                    eventoId: "",
+                    date: this.dataInicio.toLocaleDateString("pt-BR"),
+                    id: this.todos.length,
+                    prazo: this.prazo.toLocaleDateString("pt-BR")
+                  });
+                }
+              } else{
+                this.alerta("Data prazo menor do que data inicial. EVENTO NÃO CRIADO");
+              }
+            } else{
+              this.alerta("Data prazo menor do que data inicial. EVENTO NÃO CRIADO");
+            }
+          } else{
+            this.alerta("Data prazo menor do que data inicial. EVENTO NÃO CRIADO");
           }
         }
       }
+
       this.newTodo = "";
       this.prazo = "";
       this.checked = false;
@@ -272,10 +309,6 @@ export default {
       if (this.newTitle.length || !(this.newPrazo === "") || !(this.newDataI === "")) {
         var contador = 0;
 
-        console.log("NOME NOVO: " + newTitle);
-        console.log("DATAI NOVO: " + newDataI);
-        console.log("PRAZO NOVO: " + newPrazo);
-
         for (contador = 0; this.todos.length; contador++) {
           if (this.todos[contador].title === this.nomeAtual) {
 
@@ -284,27 +317,128 @@ export default {
               this.todos[contador].title = newTitle;
             }else if ((this.newTitle.length) && !(this.newDataI === "") && (this.newPrazo === "")){
               console.log("2");
-              this.todos[contador].title = newTitle;
-              this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+              if(!(this.todos[contador].prazo === "")) {
+                var dataAnalise = newDataI.toLocaleDateString("pt-BR");
+                var splitDataAnalise = dataAnalise.split("/");
+                var splitPrazoAnalise = this.todos[contador].prazo.split("/");
+                if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
+                  if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
+                    if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+                      this.todos[contador].title = newTitle;
+                      this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+                    }else {
+                      this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                    }
+                  } else {
+                    this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                  }
+                } else {
+                  this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                }
+              } else{
+                this.todos[contador].title = newTitle;
+                this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+              }
             } else if ((this.newTitle.length) && (this.newDataI === "") && !(this.newPrazo === "")){
               console.log("3");
-              this.todos[contador].title = newTitle;
-              this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+              var splitDataAnalise = this.todos[contador].date.split("/");
+              var prazoAnalise = newPrazo.toLocaleDateString("pt-BR");
+              var splitPrazoAnalise = prazoAnalise.split("/");
+              if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
+                if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
+                  if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+                    this.todos[contador].title = newTitle;
+                    this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+                  } else {
+                    this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                  }
+                } else {
+                  this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                }
+              } else {
+                this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+              }
             } else if (!(this.newTitle.length) && !(this.newDataI === "") && (this.newPrazo === "")){
               console.log("4");
-              this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+              if(!(this.todos[contador].prazo === "")) {
+                var dataAnalise = newDataI.toLocaleDateString("pt-BR");
+                var splitDataAnalise = dataAnalise.split("/");
+                var splitPrazoAnalise = this.todos[contador].prazo.split("/");
+                if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
+                  if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
+                    if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+                      this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+                    } else {
+                      this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                    }
+                  } else {
+                    this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                  }
+                } else {
+                  this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                }
+              } else {
+                this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+              }
             } else if (!(this.newTitle.length) && !(this.newDataI === "") && !(this.newPrazo === "")){
               console.log("5");
-              this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
-              this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+              var dataAnalise = newDataI.toLocaleDateString("pt-BR");
+              var prazoAnalise = newPrazo.toLocaleDateString("pt-BR");
+              var splitDataAnalise = dataAnalise.split("/");
+              var splitPrazoAnalise = prazoAnalise.split("/");
+              if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
+                if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
+                  if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+                    this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+                    this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+                  } else {
+                    this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                  }
+                } else {
+                  this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                }
+              } else {
+                this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+              }
             } else if (!(this.newTitle.length) && (this.newDataI === "") && !(this.newPrazo === "")){
               console.log("6");
-              this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+              var prazoAnalise = newPrazo.toLocaleDateString("pt-BR");
+              var splitDataAnalise = this.todos[contador].date.split("/");
+              var splitPrazoAnalise = prazoAnalise.split("/");
+              if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
+                if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
+                  if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+                    this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+                  } else {
+                    this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                  }
+                } else {
+                  this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                }
+              } else {
+                this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+              }
             } else if ((this.newTitle) && !(this.newDataI === "") && !(this.newPrazo === "")){
               console.log("7");
-              this.todos[contador].title = newTitle;
-              this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
-              this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+              var dataAnalise = newDataI.toLocaleDateString("pt-BR");
+              var prazoAnalise = newPrazo.toLocaleDateString("pt-BR");
+              var splitDataAnalise = dataAnalise.split("/");
+              var splitPrazoAnalise = prazoAnalise.split("/");
+              if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
+                if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
+                  if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+                    this.todos[contador].title = newTitle;
+                    this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+                    this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+                  } else {
+                    this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                  }
+                } else {
+                  this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+                }
+              } else {
+                this.alerta("Data prazo menor do que data inicial. EVENTO NÃO EDITADO");
+              }
             }
             break;
           }
@@ -392,6 +526,9 @@ export default {
       }
       var message = "You picked: " + url;
       console.log(message);
+    },
+    alerta: function(mensagem){
+      alert(mensagem);
     }
   },
 
