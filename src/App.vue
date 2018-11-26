@@ -61,13 +61,13 @@
               </div>
               <div class="flex justify-center">
                   <p><a target="_blank"
-                    v-bind:href="todo.driveLink" v-if="todo.driveLink != '' && todo.completed === false"><button class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-1 text-xs rounded">{{todo.driveNome}}</button></a></p>
+                    v-bind:href="todo.driveLink" v-if="todo.driveLink != '' && todo.completed === false"><button ><img src="src/assets/anexo.png" width="40" height="40" v-bind:title="todo.driveNome"></button></a></p>
                   <p class="disable"><a target="_blank"
-                    v-bind:href="todo.driveLink" v-if="todo.driveLink != '' && todo.completed === true"><button class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-1 text-xs rounded">{{todo.driveNome}}</button></a></p>
+                    v-bind:href="todo.driveLink" v-if="todo.driveLink != '' && todo.completed === true"><button ><img src="src/assets/anexo.png" width="40" height="40"></button></a></p>
               </div>
               <div class="flex justify-end">
                 <div>
-                  <button v-on:click="gravarTarefa(todo.title, todo.date, todo.prazo)" v-if="todo.completed === false" @click="toggleModal" class="able"><img src="src/assets/edit.png"></button>
+                  <button v-on:click="gravarTarefa(todo.title, todo.date, todo.prazo)" v-if="todo.completed === false" @click="toggleModal" class="able"><img src="src/assets/edit.png" ></button>
                   <button v-if="todo.completed === true" class="disable"><img src="src/assets/edit.png"></button>
                   <div v-if="modal" @click.self="toggleModal" class="animated fadeIn fixed z-50 pin overflow-auto bg-smoke-dark flex">
                     <div class="animated fadeInUp fixed shadow-inner max-w-md md:relative pin-b pin-x align-top m-auto justify-end md:justify-center p-8 bg-white md:rounded w-full md:h-auto md:shadow flex flex-col">

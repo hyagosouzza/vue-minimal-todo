@@ -12,6 +12,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0",
     "vue": "^2.5.11",
+    "vue-responsive": "^1.0.2",
     "vuejs-datepicker": "^1.5.3"
   },
   "browserslist": [
