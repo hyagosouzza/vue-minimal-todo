@@ -313,7 +313,7 @@ export default {
     },
     //Adiciona tarefa
     addTodo() {
-      //Se não tiver prazo de conclusão
+      //Se não tiver data de inicio
       if (this.dataInicio === "") {
         if (this.prazo === "") {
           if (this.newTodo.length) {
@@ -343,13 +343,15 @@ export default {
             (now.getMonth() + 1) +
             "/" +
             now.getFullYear();
+          console.log("DATA INICIAL: " + dataAnalise)
+          console.log("PRAZO ESCOLHIDO: "+ this.prazo.toLocaleDateString("pt-BR"))
           var prazoAnalise = this.prazo.toLocaleDateString("pt-BR");
           var splitDataAnalise = dataAnalise.split("/");
           var splitPrazoAnalise = prazoAnalise.split("/");
 
-          if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
-            if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
-              if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+          if (parseInt(splitDataAnalise[2]) <= parseInt(splitPrazoAnalise[2])){
+            if (parseInt(splitDataAnalise[1]) <= parseInt(splitPrazoAnalise[1])){
+              if(parseInt(splitDataAnalise[0]) <= parseInt(splitPrazoAnalise[0])){
                 if (this.newTodo.length) {
                   this.todos.push({
                     title: this.newTodo,
@@ -370,19 +372,13 @@ export default {
                   });
                 }
               } else {
-                this.alerta(
-                  "Data prazo menor do que data inicial. EVENTO NÃO CRIADO"
-                );
+                this.alerta("Data prazo menor do que data inicial. EVENTO NÃO CRIADO 1");
               }
             } else {
-              this.alerta(
-                "Data prazo menor do que data inicial. EVENTO NÃO CRIADO"
-              );
+              this.alerta("Data prazo menor do que data inicial. EVENTO NÃO CRIADO 2");
             }
           } else {
-            this.alerta(
-              "Data prazo menor do que data inicial. EVENTO NÃO CRIADO"
-            );
+            this.alerta("Data prazo menor do que data inicial. EVENTO NÃO CRIADO 3");
           }
         }
       } else {
@@ -408,9 +404,9 @@ export default {
           var splitDataAnalise = dataAnalise.split("/");
           var splitPrazoAnalise = prazoAnalise.split("/");
 
-          if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
-            if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
-              if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+          if (parseInt(splitDataAnalise[2]) <= parseInt(splitPrazoAnalise[2])) {
+            if (parseInt(splitDataAnalise[1]) <= parseInt(splitPrazoAnalise[1])) {
+              if (parseInt(splitDataAnalise[0]) <= parseInt(splitPrazoAnalise[0])) {
                 if (this.newTodo.length) {
                   this.todos.push({
                     title: this.newTodo,
@@ -477,9 +473,9 @@ export default {
                 var dataAnalise = newDataI.toLocaleDateString("pt-BR");
                 var splitDataAnalise = dataAnalise.split("/");
                 var splitPrazoAnalise = this.todos[contador].prazo.split("/");
-                if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
-                  if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
-                    if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+                if (parseInt(splitDataAnalise[2]) <= parseInt(splitPrazoAnalise[2])) {
+                  if (parseInt(splitDataAnalise[1]) <= parseInt(splitPrazoAnalise[1])) {
+                    if (parseInt(splitDataAnalise[0]) <= parseInt(splitPrazoAnalise[0])) {
                       this.todos[contador].title = newTitle;
                       this.todos[contador].date = newDataI.toLocaleDateString(
                         "pt-BR"
@@ -514,9 +510,9 @@ export default {
               var splitDataAnalise = this.todos[contador].date.split("/");
               var prazoAnalise = newPrazo.toLocaleDateString("pt-BR");
               var splitPrazoAnalise = prazoAnalise.split("/");
-              if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
-                if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
-                  if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+              if (parseInt(splitDataAnalise[2]) <= parseInt(splitPrazoAnalise[2])) {
+                if (parseInt(splitDataAnalise[1]) <= parseInt(splitPrazoAnalise[1])) {
+                  if (parseInt(splitDataAnalise[0]) <= parseInt(splitPrazoAnalise[0])) {
                     this.todos[contador].title = newTitle;
                     this.todos[contador].prazo = newPrazo.toLocaleDateString(
                       "pt-BR"
@@ -546,12 +542,10 @@ export default {
                 var dataAnalise = newDataI.toLocaleDateString("pt-BR");
                 var splitDataAnalise = dataAnalise.split("/");
                 var splitPrazoAnalise = this.todos[contador].prazo.split("/");
-                if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
-                  if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
-                    if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
-                      this.todos[contador].date = newDataI.toLocaleDateString(
-                        "pt-BR"
-                      );
+                if (parseInt(splitDataAnalise[2]) <= parseInt(splitPrazoAnalise[2])) {
+                  if (parseInt(splitDataAnalise[1]) <= parseInt(splitPrazoAnalise[1])) {
+                    if (parseInt(splitDataAnalise[0]) <= parseInt(splitPrazoAnalise[0])) {
+                      this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
                     } else {
                       this.alerta(
                         "Data prazo menor do que data inicial. EVENTO NÃO EDITADO"
@@ -582,15 +576,11 @@ export default {
               var prazoAnalise = newPrazo.toLocaleDateString("pt-BR");
               var splitDataAnalise = dataAnalise.split("/");
               var splitPrazoAnalise = prazoAnalise.split("/");
-              if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
-                if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
-                  if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
-                    this.todos[contador].date = newDataI.toLocaleDateString(
-                      "pt-BR"
-                    );
-                    this.todos[contador].prazo = newPrazo.toLocaleDateString(
-                      "pt-BR"
-                    );
+              if (parseInt(splitDataAnalise[2]) <= parseInt(splitPrazoAnalise[2])) {
+                if (parseInt(splitDataAnalise[1]) <= parseInt(splitPrazoAnalise[1])) {
+                  if (parseInt(splitDataAnalise[0]) <= parseInt(splitPrazoAnalise[0])) {
+                    this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+                    this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
                   } else {
                     this.alerta(
                       "Data prazo menor do que data inicial. EVENTO NÃO EDITADO"
@@ -615,12 +605,10 @@ export default {
               var prazoAnalise = newPrazo.toLocaleDateString("pt-BR");
               var splitDataAnalise = this.todos[contador].date.split("/");
               var splitPrazoAnalise = prazoAnalise.split("/");
-              if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
-                if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
-                  if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
-                    this.todos[contador].prazo = newPrazo.toLocaleDateString(
-                      "pt-BR"
-                    );
+              if (parseInt(splitDataAnalise[2]) <= parseInt(splitPrazoAnalise[2])) {
+                if (parseInt(splitDataAnalise[1]) <= parseInt(splitPrazoAnalise[1])) {
+                  if (parseInt(splitDataAnalise[0]) <= parseInt(splitPrazoAnalise[0])) {
+                    this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
                   } else {
                     this.alerta(
                       "Data prazo menor do que data inicial. EVENTO NÃO EDITADO"
@@ -646,9 +634,9 @@ export default {
               var prazoAnalise = newPrazo.toLocaleDateString("pt-BR");
               var splitDataAnalise = dataAnalise.split("/");
               var splitPrazoAnalise = prazoAnalise.split("/");
-              if (splitDataAnalise[2] <= splitPrazoAnalise[2]) {
-                if (splitDataAnalise[1] <= splitPrazoAnalise[1]) {
-                  if (splitDataAnalise[0] <= splitPrazoAnalise[0]) {
+              if (parseInt(splitDataAnalise[2]) <= parseInt(splitPrazoAnalise[2])) {
+                if (parseInt(splitDataAnalise[1]) <= parseInt(splitPrazoAnalise[1])) {
+                  if (parseInt(splitDataAnalise[0]) <= parseInt(splitPrazoAnalise[0])) {
                     this.todos[contador].title = newTitle;
                     this.todos[contador].date = newDataI.toLocaleDateString(
                       "pt-BR"
