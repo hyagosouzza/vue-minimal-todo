@@ -47,7 +47,7 @@ function updateSigninStatus(isSignedIn) {
 }
 
 // A simple callback implementation.
- 
+
 
 /**
  *  Sign in the user upon button click.
@@ -79,6 +79,7 @@ function criaEvento(event, todo) {
     todo.eventoId = event.id;
     console.log(event.id);
     console.log("Evento criado: " + event.htmlLink);
+    message("Evento Criado com sucesso!");
   });
 }
 
@@ -96,13 +97,13 @@ function addEvent(todo) {
     var mesInt = parseInt(splitAte[1]);
     var anoInt = parseInt(splitAte[2]);
 
-    if (diaInt === 30){
-      if ((mesInt === 4) || (mesInt === 6) || (mesInt === 9) || (mesInt === 11)){
+    if (diaInt === 30) {
+      if ((mesInt === 4) || (mesInt === 6) || (mesInt === 9) || (mesInt === 11)) {
         diaInt = 1;
         mesInt = mesInt + 1;
       }
-    } else if (diaInt === 31){
-      if (mesInt === 12){
+    } else if (diaInt === 31) {
+      if (mesInt === 12) {
         diaInt = 1;
         mesInt = 1;
         anoInt = anoInt + 1;
@@ -110,16 +111,16 @@ function addEvent(todo) {
         diaInt = 1;
         mesInt = mesInt + 1;
       }
-    } else if ((diaInt === 29) && (mesInt === 2)){
+    } else if ((diaInt === 29) && (mesInt === 2)) {
       diaInt = 1;
       mesInt = mesInt + 1;
-    } else if (diaInt === 28){
-      if ((mesInt === 2) && verifBissexto(anoInt)){
+    } else if (diaInt === 28) {
+      if ((mesInt === 2) && verifBissexto(anoInt)) {
         diaInt = diaInt + 1;
-      } else if ((mesInt === 2) && !(verifBissexto(anoInt))){
+      } else if ((mesInt === 2) && !(verifBissexto(anoInt))) {
         diaInt = 1;
         mesInt = mesInt + 1;
-      } else{
+      } else {
         diaInt = diaInt + 1;
       }
     } else {
@@ -161,10 +162,22 @@ function removeEvento(todo) {
   });
 }
 
-function verifBissexto(ano){
-  if (((ano % 4) === 0) && (!((ano % 100) === 0) || ((ano % 400) === 0))){
+function verifBissexto(ano) {
+  if (((ano % 4) === 0) && (!((ano % 100) === 0) || ((ano % 400) === 0))) {
     return true;
-  } else{
+  } else {
     return false;
   }
+}
+
+function message(mensagem) {
+  // Get the snackbar DIV
+  var x = document.getElementById("snackbar");
+  x.innerHTML = mensagem;
+
+  // Add the "show" class to DIV
+  x.className = "show";
+
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function () { x.className = x.className.replace("show", ""); }, 5000);
 }
