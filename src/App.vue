@@ -336,6 +336,7 @@ export default {
               id: this.todos.length,
               prazo: ""
             });
+            message("TODO Adicionado com sucesso!");
           }
           //Se tiver prazo de conclusão
         } else {
@@ -372,6 +373,7 @@ export default {
                     id: this.todos.length,
                     prazo: this.prazo.toLocaleDateString("pt-BR")
                   });
+                  message("TODO Adicionado com sucesso!");
                 }
               } else {
                 this.alerta("Data prazo menor do que data inicial. EVENTO NÃO CRIADO 1");
@@ -398,6 +400,7 @@ export default {
               id: this.todos.length,
               prazo: ""
             });
+            message("TODO Adicionado com sucesso!");
           }
           //Se tiver prazo de conclusão
         } else {
@@ -466,6 +469,7 @@ export default {
             ) {
               console.log("1");
               this.todos[contador].title = newTitle;
+              message("TODO Editado com sucesso !");
             } else if (
               this.newTitle.length &&
               !(this.newDataI === "") &&
@@ -483,6 +487,7 @@ export default {
                       this.todos[contador].date = newDataI.toLocaleDateString(
                         "pt-BR"
                       );
+                      message("TODO Editado com sucesso !");
                     } else {
                       this.alerta(
                         "Data prazo menor do que data inicial. EVENTO NÃO EDITADO"
@@ -503,6 +508,7 @@ export default {
                 this.todos[contador].date = newDataI.toLocaleDateString(
                   "pt-BR"
                 );
+                message("TODO Editado com sucesso !");
               }
             } else if (
               this.newTitle.length &&
@@ -520,6 +526,7 @@ export default {
                     this.todos[contador].prazo = newPrazo.toLocaleDateString(
                       "pt-BR"
                     );
+                    message("TODO Editado com sucesso !");
                   } else {
                     this.alerta(
                       "Data prazo menor do que data inicial. EVENTO NÃO EDITADO"
@@ -549,6 +556,7 @@ export default {
                   if (parseInt(splitDataAnalise[1]) <= parseInt(splitPrazoAnalise[1])) {
                     if (parseInt(splitDataAnalise[0]) <= parseInt(splitPrazoAnalise[0])) {
                       this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
+                      message("TODO Editado com sucesso !");
                     } else {
                       this.alerta(
                         "Data prazo menor do que data inicial. EVENTO NÃO EDITADO"
@@ -584,6 +592,7 @@ export default {
                   if (parseInt(splitDataAnalise[0]) <= parseInt(splitPrazoAnalise[0])) {
                     this.todos[contador].date = newDataI.toLocaleDateString("pt-BR");
                     this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+                    message("TODO Editado com sucesso !");
                   } else {
                     this.alerta(
                       "Data prazo menor do que data inicial. EVENTO NÃO EDITADO"
@@ -612,6 +621,7 @@ export default {
                 if (parseInt(splitDataAnalise[1]) <= parseInt(splitPrazoAnalise[1])) {
                   if (parseInt(splitDataAnalise[0]) <= parseInt(splitPrazoAnalise[0])) {
                     this.todos[contador].prazo = newPrazo.toLocaleDateString("pt-BR");
+                    message("TODO Editado com sucesso !");
                   } else {
                     this.alerta(
                       "Data prazo menor do que data inicial. EVENTO NÃO EDITADO"
@@ -647,6 +657,7 @@ export default {
                     this.todos[contador].prazo = newPrazo.toLocaleDateString(
                       "pt-BR"
                     );
+                    message("TODO Editado com sucesso !");
                   } else {
                     this.alerta(
                       "Data prazo menor do que data inicial. EVENTO NÃO EDITADO"
@@ -672,7 +683,6 @@ export default {
         removeEvento(this.todos[contador]);
         this.todos[contador].eventoAdd = false;
         addEvent(this.todos[contador]);
-        message("TODO Editado com sucesso !");
       }
       
       this.newTitle = "";
