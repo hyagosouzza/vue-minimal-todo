@@ -422,6 +422,7 @@ export default {
                     id: this.todos.length,
                     prazo: this.prazo.toLocaleDateString("pt-BR")
                   });
+                  message("TODO Adicionado com sucesso!");
                 }
               } else {
                 this.alerta(
@@ -440,7 +441,7 @@ export default {
           }
         }
       }
-      message("TODO Adicionado com sucesso!");
+      
       this.newTodo = "";
       this.prazo = "";
       this.checked = false;
@@ -671,9 +672,9 @@ export default {
         removeEvento(this.todos[contador]);
         this.todos[contador].eventoAdd = false;
         addEvent(this.todos[contador]);
+        message("TODO Editado com sucesso !");
       }
-
-      message("TODO Editado com sucesso !");
+      
       this.newTitle = "";
       this.nomeAtual = "";
       this.checked2 = false;
